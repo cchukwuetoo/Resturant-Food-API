@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs')
 const getUserController = async (req, res) => {
     try {
         //find user
-        const user = await userModel.findById({_id:req.body.id})
+        const user = await userModel.findById({ _id: req.body.id });
         //validation
         if (!user) {
             return res.status(404).send({
@@ -38,13 +38,13 @@ const getUserController = async (req, res) => {
 //update user
 const updateUserController = async (req, res) => {
     try {
-        //fid user
+        //find user
         const user = await userModel.findById({_id: req.body.id})
         //validation
         if(!user){
             return res.status(404).send({
                 success: false,
-                message: 'Error In Update User API'
+                message: 'User not Found'
             })
         }
     } catch (error) {
