@@ -69,7 +69,7 @@ const updateUserController = async (req, res) => {
 const updatePasswordController = async (req, res) => {
     try {
         //find user
-        const user = await userModel.findId({ _id: req.body.id })
+        const user = await userModel.findById({ _id: req.body.id })
         //validation
         if (!user) {
             return res.status(404).send({
@@ -147,8 +147,28 @@ const resetPassswordController = async (req, res) => {
             success: false,
             message: 'Error in Password Reset API',
             error
-        })
+        });
     }
-}
+};
 
-module.exports = { getUserController, updateUserController, updatePasswordController, resetPassswordController };
+//delete user
+const deleteProfileController = async (req, res) => {
+    try {
+        await userModel.findByIdAndDelete(req.params.id);
+        return res.status(200).send({
+            success: true,
+            message: 'Your Account Has Been Deleted'
+        })
+    } catch (error) {
+       console.log(error);
+       res.status(500).send({
+        success: false,
+        message: 'Error In Delete Profile API',
+        error,
+       });
+    }
+};
+
+
+
+module.exports = { getUserController, updateUserController, updatePasswordController, resetPassswordController, deleteProfileController };
