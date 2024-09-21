@@ -37,7 +37,7 @@ const getAllRestaurantController = async (req, res) => {
         }
         res.status(200).send({
             success: true,
-            totalCount: restaurant.length,
+            totalCount: restaurants.length,
             restaurants
         });
     } catch (error) {
@@ -50,4 +50,60 @@ const getAllRestaurantController = async (req, res) => {
     }
 };
 
-module.exports = { createRestaurantController, getAllRestaurantController };
+// get all restaurants by id
+const getRestaurantByIdController = async (req, res) => {
+    try {
+        const restaurantId = req.params.id;
+        if (!restaurantId) {
+            return res.status(404).send({
+                success: false,
+                message: "Please Provide Restaurant ID",
+            });
+        }
+        // find resturant
+        const restaurant = await restaurantModel.findById(restaurantId)
+        if(!restaurant){
+            return res.status(404).send({
+                success: false,
+                message: 'No restaurant found!'
+            })
+        }
+        res.status(200).send({
+            succes: true,
+            restaurant,
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            success: false,
+            message: "Error Getting Restaurant by Id",
+            error
+        });
+    }
+};
+
+const deleteRestaurantController = async (req, res) => {
+    try {
+        const restaurantId = req.params.id;
+        if (!restaurantId) {
+            return res.status(404).send({
+                success: false,
+                message: "Please Provide Restaurant Id or No resturant found"
+            })
+        }
+        await restaurantModel.findByIdAndDelete(restaurantId)
+        res.status(200).send({
+            success: true,
+            message: "Restaurant Deleted Successfully"
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            success: false,
+            message: "Error deleting Restaurant",
+            error
+        })
+    }
+}
+
+module.exports = { createRestaurantController, getAllRestaurantController, getRestaurantByIdController, deleteRestaurantController };
